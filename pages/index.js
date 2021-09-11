@@ -1,55 +1,9 @@
-import React from 'react'
-import Head from 'next/head'
-import Link from 'next/link'
-import styles from '../styles/Home.module.css'
-import { SignedIn, SignedOut } from '@clerk/nextjs'
-
-const ClerkFeatures = () => (
-  <Link href="/user">
-    <a className={styles.cardContent}>
-      <img src="/icons/layout.svg" />
-      <div>
-        <h3>Explore features provided by Clerk</h3>
-        <p>
-          Interact with the user button, user profile, and more to preview what
-          your users will see
-        </p>
-      </div>
-      <div className={styles.arrow}>
-        <img src="/icons/arrow-right.svg" />
-      </div>
-    </a>
-  </Link>
-)
-
-const SignupLink = () => (
-  <Link href="/sign-up">
-    <a className={styles.cardContent}>
-      <img src="/icons/user-plus.svg" />
-      <div>
-        <h3>Sign up for an account</h3>
-        <p>
-          Sign up and sign in to explore all the features provided by Clerk
-          out-of-the-box
-        </p>
-      </div>
-      <div className={styles.arrow}>
-        <img src="/icons/arrow-right.svg" />
-      </div>
-    </a>
-  </Link>
-)
-
-const apiSample = `import { withSession } from '@clerk/nextjs/api'
-
-export default withSession((req, res) => {
-  res.statusCode = 200
-  if (req.session) {
-    res.json({ id: req.session.userId })
-  } else {
-    res.json({ id: null })
-  }
-})`
+import React, { useState } from "react";
+import Head from "next/head";
+import Link from "next/link";
+import styles from "../styles/Home.module.css";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
+import Select from "react-select";
 
 // Main component using <SignedIn> & <SignedOut>.
 //
@@ -57,137 +11,191 @@ export default withSession((req, res) => {
 // on whether or not a visitor is signed in.
 //
 // https://docs.clerk.dev/frontend/react/signedin-and-signedout
-const Main = () => (
-  <main className={styles.main}>
-    <h1 className={styles.title}>Welcome to your new app</h1>
-    <p className={styles.description}>Sign up for an account to get started</p>
-
-    <div className={styles.cards}>
-      <div className={styles.card}>
-        <SignedIn>
-          <ClerkFeatures />
-        </SignedIn>
-        <SignedOut>
-          <SignupLink />
-        </SignedOut>
+const Main = () => {
+  const [show, setShow] = useState(false);
+  return (
+    <main className={styles.main}>
+      <div className={styles.introHeader}>
+        <h1 className={styles.logo}> Clerkbook </h1>
+        <h3> Connect with friends and the world around you on Clerkbook. </h3>
       </div>
+      <div className={styles.loginCol}>
+        <div className={styles.loginCard}>
+          <input
+            type="text"
+            className={styles.textInput}
+            name="email"
+            id="email"
+            placeholder="Email or Phone Number"
+            aria-label="Email or Phone Number"
+          ></input>
 
-      <div className={styles.card}>
-        <Link href="https://dashboard.clerk.dev">
-          <a target="_blank" rel="noreferrer" className={styles.cardContent}>
-            <img src="/icons/settings.svg" />
-            <div>
-              <h3>Configure settings for your app</h3>
-              <p>
-                Visit Clerk to manage instances and configure settings for user
-                management, theme, and more
-              </p>
-            </div>
-            <div className={styles.arrow}>
-              <img src="/icons/arrow-right.svg" />
-            </div>
-          </a>
-        </Link>
+          <input
+            type="password"
+            className={styles.textInput}
+            name="pass"
+            id="pass"
+            placeholder="Password"
+            aria-label="Password"
+          ></input>
+
+          <button value="1" name="login" type="submit">
+            Log In
+          </button>
+          <div className={styles.forgotPassword}>
+            <a>Forgot password?</a>
+          </div>
+          <div className={styles.divider}></div>
+
+          <button
+            value="1"
+            name="create_account"
+            type="submit"
+            onClick={() => setShow(true)}
+          >
+            Create New Account
+          </button>
+        </div>
+        <div className={styles.createPage}>
+          Create a Page for a celebrity, band, or business
+        </div>
       </div>
-    </div>
+      <SignUpModal show={show} onClose={() => setShow(false)} />
+    </main>
+  );
+};
 
-    <APIRequest />
+const SignUpModal = (props) => {
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ].map((month) => ({ value: month, label: month }));
+  const days = [...Array(31).keys()]
+    .map((i) => i + 1)
+    .map((day) => ({ value: day, label: day }));
+  const years = [...Array(100).keys()]
+    .reverse()
+    .map((i) => i + 1921)
+    .map((year) => ({ value: year, label: year }));
 
-    <div className={styles.links}>
-      <Link href="https://docs.clerk.dev">
-        <a target="_blank" rel="noreferrer" className={styles.link}>
-          <span className={styles.linkText}>Read Clerk documentation</span>
-        </a>
-      </Link>
-      <Link href="https://nextjs.org/docs">
-        <a target="_blank" rel="noreferrer" className={styles.link}>
-          <span className={styles.linkText}>Read NextJS documentation</span>
-        </a>
-      </Link>
-    </div>
-  </main>
-)
-
-const APIRequest = () => {
-  React.useEffect(() => {
-    if (window.Prism) {
-      window.Prism.highlightAll()
-    }
-  })
-  const [response, setResponse] = React.useState(
-    '// Click above to run the request'
-  )
-  const makeRequest = async () => {
-    setResponse('// Loading...')
-
-    try {
-      const res = await fetch('/api/getAuthenticatedUserId')
-      const body = await res.json()
-      setResponse(JSON.stringify(body, null, '  '))
-    } catch (e) {
-      setResponse(
-        '// There was an error with the request. Please contact support@clerk.dev'
-      )
-    }
+  if (!props.show) {
+    return null;
   }
   return (
-    <div className={styles.backend}>
-      <h2>API request example</h2>
-      <div className={styles.card}>
-        <button
-          target="_blank"
-          rel="noreferrer"
-          className={styles.cardContent}
-          onClick={() => makeRequest()}
-        >
-          <img src="/icons/server.svg" />
-          <div>
-            <h3>fetch('/api/getAuthenticatedUserId')</h3>
-            <p>
-              Retrieve the user ID of the signed in user, or null if there is no
-              user
-            </p>
+    <div className={styles.modal} onClick={props.onClose}>
+      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modalHeader}>
+          <h2 className={styles.modalTitle}>Sign up</h2>
+          <p>It's quick and easy</p>
+          <a
+            onClick={props.onClose}
+            className={styles.closeButton}
+            tabindex="0"
+            role="button"
+          >
+            close
+          </a>
+        </div>
+        <div className={styles.modalBody}>
+          <div className={styles.signUpForm}>
+            <div className={styles.nameInput}>
+              <input
+                type="text"
+                className={styles.textInputName}
+                name="firstName"
+                id="firstName"
+                placeholder="First name"
+                aria-label="First name"
+              ></input>
+              <input
+                type="text"
+                className={styles.textInputName}
+                name="lastName"
+                id="lastName"
+                placeholder="Last name"
+                aria-label="Last name"
+              ></input>
+            </div>
+            <input
+              type="text"
+              className={styles.textInput}
+              name="email"
+              id="email"
+              placeholder="Email"
+              aria-label="Email"
+            ></input>
+            <input
+              type="text"
+              className={styles.textInput}
+              name="email"
+              id="email"
+              placeholder="Last name"
+              aria-label="Last name"
+            ></input>
+            <div>Birthday</div>
+            <div className={styles.birthdayInput}>
+              <Select options={months} className={styles.selectInput} />
+              <Select options={days} className={styles.selectInput} />
+              <Select options={years} className={styles.selectInput} />
+            </div>
+            <div>Gender</div>
+            <div>
+              <div className={styles.genderInput}>
+                <span className={styles.genderSelect}>
+                  <label>
+                    Female
+                  <input type="radio" name="gender" value="female" />
+                </label>
+                </span>
+                
+                <span className={styles.genderSelect}>
+                  <label>
+                    Male
+                  <input type="radio" name="gender" value="male" />
+                </label>
+                </span>
+                <span className={styles.genderSelect}>
+                  <label>
+                    Custom
+                  <input type="radio" name="gender" value="custom" />
+                </label>
+                </span>
+              </div>
+            </div>
           </div>
-          <div className={styles.arrow}>
-            <img src="/icons/download.svg" />
-          </div>
-        </button>
+        </div>
+        <div className={styles.modalFooter}>
+          <button onClick={props.onClose}>Sign Up</button>
+        </div>
       </div>
-      <h4>
-        Response
-        <em>
-          <SignedIn>
-            You are signed in, so the request will return your user ID
-          </SignedIn>
-          <SignedOut>
-            You are signed out, so the request will return null
-          </SignedOut>
-        </em>
-      </h4>
-      <pre>
-        <code className="language-js">{response}</code>
-      </pre>
-      <h4>pages/api/getAuthenticatedUserId.js</h4>
-      <pre>
-        <code className="language-js">{apiSample}</code>
-      </pre>
     </div>
-  )
-}
+  );
+};
 
 // Footer component
 const Footer = () => (
   <footer className={styles.footer}>
-    Powered by{' '}
+    {/* Powered by{' '}
     <a href="https://clerk.dev" target="_blank">
       <img src="/clerk.svg" alt="Clerk.dev" className={styles.logo} />
     </a>
     +
     <a href="https://nextjs.org/" target="_blank" rel="noopener noreferrer">
       <img src="/nextjs.svg" alt="Next.js" className={styles.logo} />
-    </a>
+    </a> */}
+    Powered by Clerk
   </footer>
-)
+);
 
 const Home = () => (
   <div className={styles.container}>
@@ -202,6 +210,6 @@ const Home = () => (
     <Main />
     <Footer />
   </div>
-)
+);
 
-export default Home
+export default Home;
