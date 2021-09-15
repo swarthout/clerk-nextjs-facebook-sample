@@ -8,6 +8,30 @@ import { Input } from "./Input";
 import { Button } from "./Button";
 import { useRouter } from "next/router";
 
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+].map((month) => ({ value: month, label: month }));
+
+const DAYS = [...Array(31).keys()]
+  .map((i) => i + 1)
+  .map((day) => ({ value: day, label: day }));
+
+const YEARS = [...Array(100).keys()]
+  .reverse()
+  .map((i) => i + 1921)
+  .map((year) => ({ value: year, label: year }));
+
 const BirthdaySelect = ({ name, options, control, className }) => {
   return (
     <Controller
@@ -27,28 +51,6 @@ const BirthdaySelect = ({ name, options, control, className }) => {
 };
 
 const SignUpModal = (props) => {
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ].map((month) => ({ value: month, label: month }));
-  const days = [...Array(31).keys()]
-    .map((i) => i + 1)
-    .map((day) => ({ value: day, label: day }));
-  const years = [...Array(100).keys()]
-    .reverse()
-    .map((i) => i + 1921)
-    .map((year) => ({ value: year, label: year }));
-
   const SIMPLE_REGEX_PATTERN = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
 
   const {
@@ -58,8 +60,8 @@ const SignUpModal = (props) => {
     watch,
     getValues,
     trigger,
-    formState: { errors },
-  } = useForm();
+    formState: { errors, isValid, isDirty },
+  } = useForm({ mode: "onChange" });
   const onSubmit = (data) => console.log(data);
 
   const [error, setError] = useState(null);
@@ -149,7 +151,7 @@ const SignUpModal = (props) => {
     return null;
   }
   return (
-    <div className={styles.modal} onClick={props.onClose}>
+    <div className={styles.modal}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
           <h2 className={styles.modalTitle}>Sign up</h2>
@@ -205,19 +207,19 @@ const SignUpModal = (props) => {
                   <div className={styles.label}>Birthday</div>
                   <div className={styles.birthdayInput}>
                     <BirthdaySelect
-                      options={months}
+                      options={MONTHS}
                       name="month"
                       control={control}
                       className={styles.selectInput}
                     />
                     <BirthdaySelect
-                      options={days}
+                      options={DAYS}
                       name="day"
                       control={control}
                       className={styles.selectInput}
                     />
                     <BirthdaySelect
-                      options={years}
+                      options={YEARS}
                       name="year"
                       control={control}
                       className={styles.selectInput}
@@ -293,7 +295,7 @@ const SignUpModal = (props) => {
                 </div>
                 <div className={styles.modalFooter}>
                   <Button
-                    disabled={!getValues("email") || Boolean(errors["email"])}
+                    disabled={!isDirty || !isValid}
                     onClick={async () => await emailVerification()}
                     onKeyPress={async () => await emailVerification()}
                   >
@@ -314,6 +316,7 @@ const SignUpModal = (props) => {
                 {getValues("email")}
               </span>
               <Input
+                className={styles.textInput}
                 {...register("code", {
                   required: true,
                   maxLength: 6,

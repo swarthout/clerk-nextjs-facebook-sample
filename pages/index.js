@@ -71,7 +71,7 @@ const Main = () => {
                 </div>
                 <div className={styles.divider}></div>
 
-                <button name="create_account" onClick={() => setShow(true)}>
+                <button onClick={() => setShow(true)}>
                   Create New Account
                 </button>
               </div>
@@ -88,7 +88,7 @@ const Main = () => {
               console.log(data);
               setShow(false);
             }}
-          />{" "}
+          />
         </div>
       </SignedOut>
       <SignedIn>
