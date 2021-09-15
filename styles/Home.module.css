@@ -29,10 +29,7 @@ display: flex;
 flex-direction: column;
 }
 .loginCard {
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
+  
   padding: 1rem;
   border-radius: 3px;
   background-color: #fff;
@@ -42,7 +39,21 @@ flex-direction: column;
   box-sizing: border-box;
 }
 
-.loginCard > * {
+.loginCardInputs {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+
+.loginCardInputs > * {
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  width: 30vh;
+  
+}
+
+.lowerCardInputs > * {
   padding: 0.5rem;
   margin-top: 0.5rem;
   width: 30vh;
