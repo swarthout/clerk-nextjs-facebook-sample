@@ -24,7 +24,7 @@ const MyApp = ({ Component, pageProps }) => {
    * Otherwise, use Clerk to require authentication.
    */
   return (
-    <ClerkProvider>
+    <ClerkProvider frontendApi={process.env.NEXT_PUBLIC_CLERK_FRONTEND_API}>
       <Head>
         <link
           href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.css"

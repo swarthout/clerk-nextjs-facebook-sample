@@ -1,59 +1,79 @@
 import React, { useState } from "react";
 
-import styles from "../styles/Home.module.css";
+import styles from "./SignupModal.module.css";
 import Select from "react-select";
 import { Controller, useForm } from "react-hook-form";
 import { useClerk, useSignUp, withClerk } from "@clerk/clerk-react";
+import { Input } from "./Input";
+import { Button } from "./Button";
+import { useRouter } from "next/router";
 
-const BirthdaySelect = ({name, options, control, className}) => {
- return <Controller
- control={control}
- name={name}
- render={({field: { onChange, value, name, ref }}) => (
-     <Select
-         inputRef={ref}
-         options={options}
-         value={options.find(c => c.value === value)}
-         className={className}
-         onChange={val => onChange(val.value)}
-     />
- )}
-/>
-}
+const BirthdaySelect = ({ name, options, control, className }) => {
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={({ field: { onChange, value, name, ref } }) => (
+        <Select
+          inputRef={ref}
+          options={options}
+          value={options.find((c) => c.value === value)}
+          className={className}
+          onChange={(val) => onChange(val.value)}
+        />
+      )}
+    />
+  );
+};
 
-export const SignUpModal = (props) => {
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ].map((month) => ({ value: month, label: month }));
-    const days = [...Array(31).keys()]
-      .map((i) => i + 1)
-      .map((day) => ({ value: day, label: day }));
-    const years = [...Array(100).keys()]
-      .reverse()
-      .map((i) => i + 1921)
-      .map((year) => ({ value: year, label: year }));
-  
-    const { register, handleSubmit, control, watch, getValues } = useForm();
-    const onSubmit = data => props.onSubmit(data);
+const SignUpModal = (props) => {
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ].map((month) => ({ value: month, label: month }));
+  const days = [...Array(31).keys()]
+    .map((i) => i + 1)
+    .map((day) => ({ value: day, label: day }));
+  const years = [...Array(100).keys()]
+    .reverse()
+    .map((i) => i + 1921)
+    .map((year) => ({ value: year, label: year }));
 
-    const watchGender = watch("gender", false)
+  const SIMPLE_REGEX_PATTERN = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
 
-    const [formStep, setFormStep] = useState("EMAIL");
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    getValues,
+    trigger,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data) => console.log(data);
 
-    const signUp = useSignUp();
-    const clerk = useClerk();
+  const [error, setError] = useState(null);
+  const setClerkError = (error, type) =>
+    setError({ type, message: error.longMessage });
 
+  const router = useRouter();
+
+  const watchGender = watch("gender", false);
+
+  const [formStep, setFormStep] = useState("EMAIL");
+
+  const signUp = useSignUp();
+  const clerk = useClerk();
 
   const emailVerification = async function () {
     try {
@@ -75,8 +95,8 @@ export const SignUpModal = (props) => {
       code: otp,
     });
     if (signUpAttempt.verifications.emailAddress.status === "verified") {
-        setError(null);
-        setFormStep("COMPLETE");
+      setError(null);
+      completeRegistration();
     }
   };
 
@@ -89,141 +109,232 @@ export const SignUpModal = (props) => {
   };
 
   const completeRegistration = async () => {
-    const { username, firstName, lastName, month, day, year, gender, pronouns, customGenderText } = getValues();
+    const {
+      username,
+      firstName,
+      lastName,
+      password,
+      month,
+      day,
+      year,
+      gender,
+      pronouns,
+      customGenderText,
+    } = getValues();
     const signUpAttempt = await signUp.update({
       username,
       firstName,
       lastName,
+      password,
       unsafeMetadata: {
-          "birthday": {
-              "month": month,
-              "day": day,
-              "year": year,
-              "gender": gender,
-              "pronouns": pronouns,
-              "customGenderText": customGenderText
-          }
-      }
+        birthday: {
+          month: month,
+          day: day,
+          year: year,
+        },
+        gender: {
+          gender: gender,
+          pronouns: pronouns,
+          customGenderText: customGenderText,
+        },
+      },
     });
     if (signUpAttempt.status === "complete") {
       await clerk.setSession(signUpAttempt.createdSessionId);
       router.replace("/");
     }
   };
-  
-    if (!props.show) {
-      return null;
-    }
-    return (
-      <div className={styles.modal} onClick={props.onClose}>
-        <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-          <div className={styles.modalHeader}>
-            <h2 className={styles.modalTitle}>Sign up</h2>
-            <p>It's quick and easy</p>
-            <a
-              onClick={props.onClose}
-              className={styles.closeButton}
-              role="button"
-            >
-              close
-            </a>
-          </div>
-          {formStep === "EMAIL" && (
-          <form onSubmit={handleSubmit(onSubmit)}>
-          <div className={styles.modalBody}>
-            <div className={styles.signUpForm}>
-              <div className={styles.nameInput}>
-                <input
-                  type="text"
-                  className={styles.textInputName}
-                  placeholder="First name"
-                  aria-label="First name"
-                  {...register("firstName")} 
-                ></input>
-                <input
-                  type="text"
-                  className={styles.textInputName}
-                  placeholder="Last name"
-                  aria-label="Last name"
-                  {...register("lastName")} 
-                ></input>
-              </div>
-              <input
-                type="text"
-                className={styles.textInput}
-                placeholder="Email"
-                aria-label="Email"
-                {...register("email")} 
-              ></input>
-              <input
-                type="password"
-                className={styles.textInput}
-                placeholder="New password"
-                aria-label="New password"
-                {...register("password")} 
-              ></input>
-              <div>Birthday</div>
-              <div className={styles.birthdayInput}>
-              <BirthdaySelect options={months} name="month" control={control} className={styles.selectInput}/>
-              <BirthdaySelect options={days} name="day" control={control} className={styles.selectInput}/>
-              <BirthdaySelect options={years} name="year" control={control} className={styles.selectInput}/>
-              </div>
-              <div>Gender</div>
-              <div>
-                <div className={styles.genderInput}>
-                  <span className={styles.genderSelect}>
-                    <label>
-                      Female
-                    <input type="radio" name="gender" value="female" {...register("gender")}/>
-                  </label>
-                  </span>
-                  
-                  <span className={styles.genderSelect}>
-                    <label>
-                      Male
-                    <input type="radio" name="gender" value="male" {...register("gender")}/>
-                  </label>
-                  </span>
-                  <span className={styles.genderSelect}>
-                    <label>
-                      Custom
-                    <input type="radio" name="gender" value="custom" {...register("gender")}/>
-                  </label>
-                  </span>
-                </div>
-              </div>
-              {
-                  watchGender == "custom" && (
-                      <>
-                    <select {...register("pronouns")} className={styles.textInput}>
-                    <option value="she">She: "Wish her a happy birthday!"</option>
-                    <option value="he">He: "Wish him a happy birthday!"</option>
-                    <option value="they">They: "Wish them a happy birthday!"</option>
-                  </select>
 
-                    <input
-                    type="text"
-                    className={styles.textInput}
-                    placeholder="Gender (optional)"
-                    aria-label="Gender (optional)"
-                    {...register("customGenderText")} 
-                    ></input>
-                    </>
-                  )
-              }
-            </div>
-          </div>
-          <div className={styles.modalFooter}>
-            <button type="submit">Sign Up</button>
-          </div>
-          </form>
-          )}
-
-{formStep === "CODE" && (
-    <>
-    </>
-)}
+  if (!props.show) {
+    return null;
+  }
+  return (
+    <div className={styles.modal} onClick={props.onClose}>
+      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modalHeader}>
+          <h2 className={styles.modalTitle}>Sign up</h2>
+          <p>It's quick and easy</p>
+          <a
+            onClick={props.onClose}
+            className={styles.closeButton}
+            role="button"
+          ></a>
         </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className={styles.modalBody}>
+            {formStep === "EMAIL" && (
+              <>
+                <div className={styles.signUpForm}>
+                  <div className={styles.nameInput}>
+                    <Input
+                      className={styles.textInputName}
+                      {...register("firstName", {
+                        required: true,
+                        minLength: 2,
+                      })}
+                      placeholder="First name"
+                    />
+                    <Input
+                      className={styles.textInputName}
+                      {...register("lastName", {
+                        required: true,
+                        minLength: 2,
+                      })}
+                      placeholder="Last name"
+                    />
+                  </div>
+                  <Input
+                    className={styles.textInput}
+                    errorText={error?.message}
+                    {...register("email", {
+                      required: true,
+                      pattern: SIMPLE_REGEX_PATTERN,
+                    })}
+                    placeholder="Email address"
+                  />
+                  <Input
+                    className={styles.textInput}
+                    errorText={error?.message}
+                    {...register("password", {
+                      required: true,
+                      minLength: 8,
+                    })}
+                    placeholder="New password"
+                    type="password"
+                  />
+                  <div className={styles.label}>Birthday</div>
+                  <div className={styles.birthdayInput}>
+                    <BirthdaySelect
+                      options={months}
+                      name="month"
+                      control={control}
+                      className={styles.selectInput}
+                    />
+                    <BirthdaySelect
+                      options={days}
+                      name="day"
+                      control={control}
+                      className={styles.selectInput}
+                    />
+                    <BirthdaySelect
+                      options={years}
+                      name="year"
+                      control={control}
+                      className={styles.selectInput}
+                    />
+                  </div>
+
+                  <div>
+                    <div className={styles.label}>Gender</div>
+                    <div className={styles.genderInput}>
+                      <span className={styles.genderSelect}>
+                        <label>
+                          Female
+                          <input
+                            type="radio"
+                            name="gender"
+                            value="female"
+                            {...register("gender", { required: true })}
+                          />
+                        </label>
+                      </span>
+
+                      <span className={styles.genderSelect}>
+                        <label>
+                          Male
+                          <input
+                            type="radio"
+                            name="gender"
+                            value="male"
+                            {...register("gender", { required: true })}
+                          />
+                        </label>
+                      </span>
+                      <span className={styles.genderSelect}>
+                        <label>
+                          Custom
+                          <input
+                            type="radio"
+                            name="gender"
+                            value="custom"
+                            {...register("gender", { required: true })}
+                          />
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+                  {watchGender == "custom" && (
+                    <>
+                      <select
+                        {...register("pronouns")}
+                        className={styles.textInput}
+                      >
+                        <option value="she">
+                          She: "Wish her a happy birthday!"
+                        </option>
+                        <option value="he">
+                          He: "Wish him a happy birthday!"
+                        </option>
+                        <option value="they">
+                          They: "Wish them a happy birthday!"
+                        </option>
+                      </select>
+
+                      <Input
+                        className={styles.textInput}
+                        {...register("customGenderText", {
+                          required: false,
+                          minLength: 2,
+                        })}
+                        placeholder="Gender (optional)"
+                      />
+                    </>
+                  )}
+                </div>
+                <div className={styles.modalFooter}>
+                  <Button
+                    disabled={!getValues("email") || Boolean(errors["email"])}
+                    onClick={async () => await emailVerification()}
+                    onKeyPress={async () => await emailVerification()}
+                  >
+                    Sign Up
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+        </form>
+
+        {formStep === "CODE" && (
+          <>
+            <div className={styles.signUpForm}>
+              <h3>Enter the confirmation code</h3>
+              <span>
+                A 6-digit code was just sent to <br />
+                {getValues("email")}
+              </span>
+              <Input
+                {...register("code", {
+                  required: true,
+                  maxLength: 6,
+                  minLength: 6,
+                })}
+                onPaste={async () => await trigger("code")}
+              />
+              <div className={styles.modalFooter}>
+                <Button
+                  onClick={async () => await verifyOtp()}
+                  onKeyPress={async () => await verifyOtp()}
+                >
+                  Continue
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
-    );
-  };
+    </div>
+  );
+};
+
+export const SignUpModalWithClerk = withClerk(SignUpModal);

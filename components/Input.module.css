@@ -1,0 +1,20 @@
+.input {
+  width: 100%;
+  text-align: center;
+}
+
+.input:focus,
+.input:active {
+  border: none;
+  outline: none;
+}
+
+.helperText {
+  display: block;
+  align-self: flex-start;
+}
+
+.errorText {
+  display: block;
+  align-self: flex-start;
+}
