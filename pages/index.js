@@ -65,7 +65,7 @@ const Main = () => {
                   </button>
                 </div>
               </form>
-              <div className={styles.lowerCardInputs}>
+              <div className={styles.lowerCardItems}>
                 <div className={styles.forgotPassword}>
                   <a>Forgot password?</a>
                 </div>
