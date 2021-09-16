@@ -60,6 +60,7 @@ const SignUpModal = (props) => {
     watch,
     getValues,
     trigger,
+    setValue,
     formState: { errors, isValid, isDirty },
   } = useForm({ mode: "onChange" });
   const onSubmit = (data) => console.log(data);
@@ -229,39 +230,33 @@ const SignUpModal = (props) => {
                   <div>
                     <div className={styles.label}>Gender</div>
                     <div className={styles.genderInput}>
-                      <span className={styles.genderSelect}>
-                        <label>
-                          Female
-                          <input
-                            type="radio"
-                            name="gender"
-                            value="female"
-                            {...register("gender", { required: true })}
-                          />
-                        </label>
+                      <span className={styles.genderSelect} onClick={() => setValue('gender', 'female', { shouldValidate: true })}>
+                        <label>Female</label>
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="female"
+                          {...register("gender", { required: true })}
+                        />
                       </span>
 
-                      <span className={styles.genderSelect}>
-                        <label>
-                          Male
-                          <input
-                            type="radio"
-                            name="gender"
-                            value="male"
-                            {...register("gender", { required: true })}
-                          />
-                        </label>
+                      <span className={styles.genderSelect} onClick={() => setValue('gender', 'male', { shouldValidate: true })}>
+                        <label>Male</label>
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="male"
+                          {...register("gender", { required: true })}
+                        />
                       </span>
-                      <span className={styles.genderSelect}>
-                        <label>
-                          Custom
-                          <input
-                            type="radio"
-                            name="gender"
-                            value="custom"
-                            {...register("gender", { required: true })}
-                          />
-                        </label>
+                      <span className={styles.genderSelect} onClick={() => setValue('gender', 'custom', { shouldValidate: true })}>
+                        <label>Custom</label>
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="custom"
+                          {...register("gender", { required: true })}
+                        />
                       </span>
                     </div>
                   </div>

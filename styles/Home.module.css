@@ -15,6 +15,16 @@
   background-color: lightgray;
 }
 
+.home {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+}
+
 .footer {
   width: 100%;
   height: 32vh;
@@ -23,8 +33,31 @@
   justify-content: center;
   padding: 1rem;
 }
+.createAccountButton {
+  border: none;
+  border-radius: 6px;
+  font-size: 17px;
+  line-height: 32px;
+  padding: 0 16px;
+  background-color: #42b72a;
+  color: #fff;
+  font-weight: bold;
+  width: 100%;
+}
 
-.loginCol {
+.loginButton {
+  background-color: #1877f2;
+  border: none;
+  border-radius: 6px;
+  font-size: 20px;
+  line-height: 32px;
+  padding: 8px 8px;
+  color: #fff;
+  font-weight: bold;
+  width: 100%;
+}
+
+.rightColumn {
   display: flex;
   flex-direction: column;
 }
@@ -45,12 +78,6 @@
   align-items: center;
 }
 
-.loginCardInputs > * {
-  padding: 0.5rem;
-  margin-top: 0.5rem;
-  width: 30vh;
-}
-
 .lowerCardInputs > * {
   padding: 0.5rem;
   margin-top: 0.5rem;
@@ -63,11 +90,13 @@
 }
 
 .logo {
-  color: blue;
+  color: #1877f2;;
 }
 .forgotPassword {
   text-align: center;
-  color: blue;
+  color: #1877f2;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .divider {
@@ -83,4 +112,16 @@
   padding-top: 1rem;
 }
 
-
+.textInput {
+  background-color: white;
+  border: 1px solid #dddfe2;
+  color: #1d2129;
+  font-family: Helvetica, Arial, sans-serif;
+  height: 48px;
+  padding: 16px 16px;
+  margin-bottom: 1rem;
+  vertical-align: middle;
+  width: 100%;
+  font-size: 17px;
+  border-radius: 6px;
+}

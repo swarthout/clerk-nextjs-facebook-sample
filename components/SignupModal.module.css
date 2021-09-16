@@ -1,121 +1,120 @@
 .label {
-    padding-top: 0.5rem;
+  padding-top: 0.5rem;
 }
 
 .modal {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .modalContent {
-    width: 50vh;
-    background-color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
-    box-sizing: border-box;
-    position: relative;
-  }
-  .modalHeader,
-  .modalFooter {
-    padding: 16px;
-  }
-  
-  .modalFooter {
-    text-align: center;
-  }
-  
-  .modalTitle {
-    margin: 0;
-    font-size: 24pt;
-  }
-  
-  .modalBody {
-    padding: 10px;
-    border-top: 1px solid #eee;
-  }
-  
-  .closeButton {
-    position: absolute;
-    top: 0;
-    right: 0;
-    display: block;
-    width: 50px;
-    height: 50px;
-    font-size: 0;
-  }
-  .closeButton:before,
-  .closeButton:after {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 3px;
-    height: 20px;
-    background-color: gray;
-    transform: rotate(45deg) translate(-50%, -50%);
-    transform-origin: top left;
-    content: "";
-  }
-  .closeButton:after {
-    transform: rotate(-45deg) translate(-50%, -50%);
-  }
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  .signUpForm {
-    display: flex;
-    flex-direction: column;
-    padding: 0 16px;
-  }
-  
-  .nameInput {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-  
-  .textInput {
-    padding: 0.5rem;
-    margin-top: 0.75rem;
-  }
-  .textInputName {
-    width: 48%;
-    padding: 0.5rem;
-  }
+.modalContent {
+  width: 50vh;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
+  box-sizing: border-box;
+  position: relative;
+}
+.modalHeader,
+.modalFooter {
+  padding: 16px;
+}
 
+.modalFooter {
+  text-align: center;
+}
 
+.modalTitle {
+  margin: 0;
+  font-size: 24pt;
+}
 
+.modalBody {
+  padding: 10px;
+  border-top: 1px solid #eee;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  width: 50px;
+  height: 50px;
+  font-size: 0;
+}
+.closeButton:before,
+.closeButton:after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 20px;
+  background-color: gray;
+  transform: rotate(45deg) translate(-50%, -50%);
+  transform-origin: top left;
+  content: "";
+}
+.closeButton:after {
+  transform: rotate(-45deg) translate(-50%, -50%);
+}
+
+.signUpForm {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px;
+}
+
+.nameInput {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.textInput {
+  padding: 0.5rem;
+  margin-top: 0.75rem;
+}
+.textInputName {
+  width: 48%;
+  padding: 0.5rem;
+}
 
 .birthdayInput {
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-top: 0.75rem;
-  }
-  
-  .selectInput {
-    width: 30%;
-  }
-  
-  .genderInput {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-top: 0.75rem;
-  }
-  
-  .genderSelect {
-    background-color: #fff;
-    border: 1px solid #ccd0d5;
-    box-sizing: border-box;
-    border-radius: 2px;
-    width: 30%;
-    padding: 0.5rem;
-  }
-  
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+}
+
+.selectInput {
+  width: 30%;
+}
+
+.genderInput {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+}
+
+.genderSelect {
+  background-color: #fff;
+  border: 1px solid #ccd0d5;
+  box-sizing: border-box;
+  border-radius: 2px;
+  width: 30%;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}

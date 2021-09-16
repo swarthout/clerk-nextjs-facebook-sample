@@ -4,7 +4,7 @@ import styles from "../styles/Home.module.css";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { useForm } from "react-hook-form";
 import { SignUpModalWithClerk } from "../components/SignupModal";
-import { UserButton, useSignIn, withClerk, useClerk } from "@clerk/clerk-react";
+import { useSignIn, withClerk, useClerk, useUser } from "@clerk/clerk-react";
 import { useRouter } from "next/router";
 
 // Main component using <SignedIn> & <SignedOut>.
@@ -40,7 +40,7 @@ const Main = () => {
             <h1 className={styles.logo}> Clerkbook </h1>
             <h3>Connect with friends and the world around you on Clerkbook.</h3>
           </div>
-          <div className={styles.loginCol}>
+          <div className={styles.rightColumn}>
             <div className={styles.loginCard}>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className={styles.loginCardInputs}>
@@ -60,7 +60,7 @@ const Main = () => {
                     {...register("password", { required: true })}
                   ></input>
 
-                  <button name="login" type="submit">
+                  <button className={styles.loginButton} name="login" type="submit">
                     Log In
                   </button>
                 </div>
@@ -71,7 +71,7 @@ const Main = () => {
                 </div>
                 <div className={styles.divider}></div>
 
-                <button onClick={() => setShow(true)}>
+                <button className={styles.createAccountButton} onClick={() => setShow(true)}>
                   Create New Account
                 </button>
               </div>
@@ -81,21 +81,28 @@ const Main = () => {
               Create a Page for a celebrity, band, or business
             </div>
           </div>
-          <SignUpModalWithClerk
-            show={show}
-            onClose={() => setShow(false)}
-            onSubmit={(data) => {
-              console.log(data);
-              setShow(false);
-            }}
-          />
+          <SignUpModalWithClerk show={show} onClose={() => setShow(false)} />
         </div>
       </SignedOut>
       <SignedIn>
-        <div>Signed in!</div>
-        <UserButton afterSignOutAllUrl="/" />
+        <Profile />
       </SignedIn>
     </>
+  );
+};
+
+const Profile = () => {
+  const user = useUser();
+  const clerk = useClerk();
+  const birthday = user.unsafeMetadata.birthday;
+  const birthdayString = birthday.month + " " + birthday.day + ", " + birthday.year;
+  return (
+    <div className={styles.home}>
+      <h1>Welcome to Clerkbook!</h1>
+      <h2>{user.fullName}</h2>
+      <h3>Birthday: {birthdayString}</h3>
+      <button onClick={() => clerk.signOut()}>Sign out</button>
+    </div>
   );
 };
 
