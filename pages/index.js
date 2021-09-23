@@ -38,7 +38,7 @@ const Main = () => {
         <div className={styles.main}>
           <div className={styles.introHeader}>
             <h1 className={styles.logo}> Clerkbook </h1>
-            <h3>Connect with friends and the world around you on Clerkbook.</h3>
+            <h3 className={styles.tagline}>Connect with friends and the world around you on Clerkbook.</h3>
           </div>
           <div className={styles.rightColumn}>
             <div className={styles.loginCard}>
@@ -98,7 +98,7 @@ const Profile = () => {
   const birthdayString = birthday.month + " " + birthday.day + ", " + birthday.year;
   return (
     <div className={styles.home}>
-      <h1>Welcome to Clerkbook!</h1>
+      <h1 className={styles.logo}>Welcome to Clerkbook!</h1>
       <h2>{user.fullName}</h2>
       <h3>Birthday: {birthdayString}</h3>
       <button onClick={() => clerk.signOut()}>Sign out</button>

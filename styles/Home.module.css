@@ -12,7 +12,7 @@
   height: 100vh;
   justify-content: space-evenly;
   align-items: center;
-  background-color: lightgray;
+  background-color: #f0f2f5;
 }
 
 .home {
@@ -31,7 +31,9 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
+  align-items: center;
   padding: 1rem;
+  font-size: 18px;
 }
 .createAccountButton {
   border: none;
@@ -69,6 +71,7 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
   box-sizing: border-box;
+  width: 40vh;
 }
 
 .loginCardInputs {
@@ -90,13 +93,21 @@
 }
 
 .introHeader {
-  width: 30vh;
+  width: 40vh;
   word-wrap: break-word;
 }
 
 .logo {
-  color: #1877f2;;
+  color: #1777f1;
+  font-size: 54px;
+  font-weight: bold;
 }
+
+.tagline {
+  font-size: 24px;
+  font-weight: lighter;
+}
+
 .forgotPassword {
   text-align: center;
   color: #1877f2;

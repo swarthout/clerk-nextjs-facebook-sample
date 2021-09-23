@@ -264,7 +264,7 @@ const SignUpModal = (props) => {
                     <>
                       <select
                         {...register("pronouns")}
-                        className={styles.textInput}
+                        className={styles.pronounSelect}
                       >
                         <option value="she">
                           She: "Wish her a happy birthday!"
@@ -293,6 +293,7 @@ const SignUpModal = (props) => {
                     disabled={!isDirty || !isValid}
                     onClick={async () => await emailVerification()}
                     onKeyPress={async () => await emailVerification()}
+                    className={styles.signUpButton}
                   >
                     Sign Up
                   </Button>
@@ -323,6 +324,7 @@ const SignUpModal = (props) => {
                 <Button
                   onClick={async () => await verifyOtp()}
                   onKeyPress={async () => await verifyOtp()}
+                  className={styles.signUpButton}
                 >
                   Continue
                 </Button>
