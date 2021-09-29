@@ -1,57 +1,16 @@
 import React, { useState } from "react";
 
 import styles from "./SignupModal.module.css";
-import Select from "react-select";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useClerk, useSignUp, withClerk } from "@clerk/clerk-react";
 import { Input } from "./Input";
 import { Button } from "./Button";
 import { useRouter } from "next/router";
-
-const MONTHS = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-].map((month) => ({ value: month, label: month }));
-
-const DAYS = [...Array(31).keys()]
-  .map((i) => i + 1)
-  .map((day) => ({ value: day, label: day }));
-
-const YEARS = [...Array(100).keys()]
-  .reverse()
-  .map((i) => i + 1921)
-  .map((year) => ({ value: year, label: year }));
-
-const BirthdaySelect = ({ name, options, control, className }) => {
-  return (
-    <Controller
-      control={control}
-      name={name}
-      render={({ field: { onChange, value, name, ref } }) => (
-        <Select
-          inputRef={ref}
-          options={options}
-          value={options.find((c) => c.value === value)}
-          className={className}
-          onChange={(val) => onChange(val.value)}
-        />
-      )}
-    />
-  );
-};
+import { BirthdaySelect } from "./BirthdaySelect";
+import { MONTHS, DAYS, YEARS, SIMPLE_REGEX_PATTERN } from "./constants";
 
 const SignUpModal = (props) => {
-  const SIMPLE_REGEX_PATTERN = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+  
 
   const {
     register,
