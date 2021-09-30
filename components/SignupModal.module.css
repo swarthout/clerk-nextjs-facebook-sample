@@ -75,12 +75,10 @@
   flex-direction: column;
   padding: 0 16px;
 }
-
 .nameInput {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  
 }
 
 .textInput {
@@ -153,7 +151,6 @@
   font-size: 17px;
   border-radius: 6px;
 }
-
 
 .signUpButton {
   border: none;

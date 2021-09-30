@@ -10,8 +10,6 @@ import { BirthdaySelect } from "./BirthdaySelect";
 import { MONTHS, DAYS, YEARS, SIMPLE_REGEX_PATTERN } from "./constants";
 
 const SignUpModal = (props) => {
-  
-
   const {
     register,
     handleSubmit,
@@ -189,7 +187,12 @@ const SignUpModal = (props) => {
                   <div>
                     <div className={styles.label}>Gender</div>
                     <div className={styles.genderInput}>
-                      <span className={styles.genderSelect} onClick={() => setValue('gender', 'female', { shouldValidate: true })}>
+                      <span
+                        className={styles.genderSelect}
+                        onClick={() =>
+                          setValue("gender", "female", { shouldValidate: true })
+                        }
+                      >
                         <label>Female</label>
                         <input
                           type="radio"
@@ -199,7 +202,12 @@ const SignUpModal = (props) => {
                         />
                       </span>
 
-                      <span className={styles.genderSelect} onClick={() => setValue('gender', 'male', { shouldValidate: true })}>
+                      <span
+                        className={styles.genderSelect}
+                        onClick={() =>
+                          setValue("gender", "male", { shouldValidate: true })
+                        }
+                      >
                         <label>Male</label>
                         <input
                           type="radio"
@@ -208,7 +216,12 @@ const SignUpModal = (props) => {
                           {...register("gender", { required: true })}
                         />
                       </span>
-                      <span className={styles.genderSelect} onClick={() => setValue('gender', 'custom', { shouldValidate: true })}>
+                      <span
+                        className={styles.genderSelect}
+                        onClick={() =>
+                          setValue("gender", "custom", { shouldValidate: true })
+                        }
+                      >
                         <label>Custom</label>
                         <input
                           type="radio"
@@ -259,38 +272,38 @@ const SignUpModal = (props) => {
                 </div>
               </>
             )}
+
+            {formStep === "CODE" && (
+              <>
+                <div className={styles.signUpForm}>
+                  <h3>Enter the confirmation code</h3>
+                  <span>
+                    A 6-digit code was just sent to <br />
+                    {getValues("email")}
+                  </span>
+                  <Input
+                    className={styles.textInput}
+                    {...register("code", {
+                      required: true,
+                      maxLength: 6,
+                      minLength: 6,
+                    })}
+                    onPaste={async () => await trigger("code")}
+                  />
+                  <div className={styles.modalFooter}>
+                    <Button
+                      onClick={async () => await verifyOtp()}
+                      onKeyPress={async () => await verifyOtp()}
+                      className={styles.signUpButton}
+                    >
+                      Continue
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </form>
-
-        {formStep === "CODE" && (
-          <>
-            <div className={styles.signUpForm}>
-              <h3>Enter the confirmation code</h3>
-              <span>
-                A 6-digit code was just sent to <br />
-                {getValues("email")}
-              </span>
-              <Input
-                className={styles.textInput}
-                {...register("code", {
-                  required: true,
-                  maxLength: 6,
-                  minLength: 6,
-                })}
-                onPaste={async () => await trigger("code")}
-              />
-              <div className={styles.modalFooter}>
-                <Button
-                  onClick={async () => await verifyOtp()}
-                  onKeyPress={async () => await verifyOtp()}
-                  className={styles.signUpButton}
-                >
-                  Continue
-                </Button>
-              </div>
-            </div>
-          </>
-        )}
       </div>
     </div>
   );
