@@ -50,10 +50,6 @@ const Main = () => {
               register={register}
               onCreateAccount={() => setShow(true)}
             />
-
-            <div className={styles.createPage}>
-              Create a Page for a celebrity, band, or business
-            </div>
           </div>
           <SignUpModalWithClerk show={show} onClose={() => setShow(false)} />
         </div>
