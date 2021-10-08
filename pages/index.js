@@ -22,15 +22,28 @@ const Main = () => {
   const signIn = useSignIn();
   const router = useRouter();
 
-  const onSubmit = async (data) => {
-    const signInAttempt = await signIn.create({
-      identifier: data.email,
-      password: data.password,
-    });
+  const [error, setError] = useState(null);
 
-    if (signInAttempt.status === "complete") {
-      await clerk.setSession(signInAttempt.createdSessionId);
-      router.replace("/");
+  const setClerkError = (error) =>
+    setError({ type: error.meta.paramName, message: error.longMessage });
+
+  const onSubmit = async (data) => {
+    try {
+      const signInAttempt = await signIn.create({
+        identifier: data.emailAddress,
+        password: data.password,
+      });
+
+      if (signInAttempt.status === "complete") {
+        await clerk.setSession(signInAttempt.createdSessionId);
+        router.replace("/");
+      }
+    } catch (err) {
+      if (err.errors) {
+        setClerkError(err.errors[0]);
+      } else {
+        throw err;
+      }
     }
   };
 
@@ -46,9 +59,10 @@ const Main = () => {
           </div>
           <div className={styles.rightColumn}>
             <LoginCard
-              onSubmit={() => handleSumbit(onSubmit)}
+              onSubmit={handleSubmit(onSubmit)}
               register={register}
               onCreateAccount={() => setShow(true)}
+              error={error}
             />
           </div>
           <SignUpModalWithClerk show={show} onClose={() => setShow(false)} />

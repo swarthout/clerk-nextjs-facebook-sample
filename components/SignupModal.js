@@ -4,7 +4,6 @@ import styles from "./SignupModal.module.css";
 import { useForm } from "react-hook-form";
 import { useClerk, useSignUp, withClerk } from "@clerk/clerk-react";
 import { Input } from "./Input";
-import { Button } from "./Button";
 import { useRouter } from "next/router";
 import { BirthdaySelect } from "./BirthdaySelect";
 import { MONTHS, DAYS, YEARS, SIMPLE_REGEX_PATTERN } from "./constants";
@@ -23,8 +22,8 @@ const SignUpModal = (props) => {
   const onSubmit = (data) => console.log(data);
 
   const [error, setError] = useState(null);
-  const setClerkError = (error, type) =>
-    setError({ type, message: error.longMessage });
+  const setClerkError = (error) =>
+    setError({ type: error.meta.paramName, message: error.longMessage });
 
   const router = useRouter();
 
@@ -35,20 +34,6 @@ const SignUpModal = (props) => {
   const signUp = useSignUp();
   const clerk = useClerk();
 
-  const emailVerification = async function () {
-    try {
-      setError(null);
-      await sendClerkOtp();
-      setFormStep("CODE");
-    } catch (err) {
-      if (err.errors) {
-        setClerkError(err.errors[0], "email");
-      } else {
-        throw err;
-      }
-    }
-  };
-
   const verifyOtp = async function () {
     const otp = getValues("code");
     const signUpAttempt = await signUp.attemptEmailAddressVerification({
@@ -56,24 +41,18 @@ const SignUpModal = (props) => {
     });
     if (signUpAttempt.verifications.emailAddress.status === "verified") {
       setError(null);
-      completeRegistration();
+      await clerk.setSession(signUpAttempt.createdSessionId);
+      router.replace("/");
     }
   };
 
-  const sendClerkOtp = async function () {
-    const emailAddress = getValues("email");
-    const signUpAttempt = await signUp.create({
-      emailAddress,
-    });
-    await signUpAttempt.prepareEmailAddressVerification();
-  };
-
-  const completeRegistration = async () => {
+  const startRegistration = async () => {
     const {
       username,
       firstName,
       lastName,
       password,
+      emailAddress,
       month,
       day,
       year,
@@ -81,27 +60,35 @@ const SignUpModal = (props) => {
       pronouns,
       customGenderText,
     } = getValues();
-    const signUpAttempt = await signUp.update({
-      username,
-      firstName,
-      lastName,
-      password,
-      unsafeMetadata: {
-        birthday: {
-          month: month,
-          day: day,
-          year: year,
+
+    try {
+      const signUpAttempt = await signUp.create({
+        username,
+        firstName,
+        lastName,
+        emailAddress,
+        password,
+        unsafeMetadata: {
+          birthday: {
+            month: month,
+            day: day,
+            year: year,
+          },
+          gender: {
+            gender: gender,
+            pronouns: pronouns,
+            customGenderText: customGenderText,
+          },
         },
-        gender: {
-          gender: gender,
-          pronouns: pronouns,
-          customGenderText: customGenderText,
-        },
-      },
-    });
-    if (signUpAttempt.status === "complete") {
-      await clerk.setSession(signUpAttempt.createdSessionId);
-      router.replace("/");
+      });
+      await signUpAttempt.prepareEmailAddressVerification();
+      setFormStep("CODE");
+    } catch (err) {
+      if (err.errors) {
+        setClerkError(err.errors[0]);
+      } else {
+        throw err;
+      }
     }
   };
 
@@ -145,8 +132,8 @@ const SignUpModal = (props) => {
                   </div>
                   <Input
                     className={styles.textInput}
-                    errorText={error?.message}
-                    {...register("email", {
+                    errorText={error && error.type == "emailAddress" && error?.message}
+                    {...register("emailAddress", {
                       required: true,
                       pattern: SIMPLE_REGEX_PATTERN,
                     })}
@@ -154,7 +141,9 @@ const SignUpModal = (props) => {
                   />
                   <Input
                     className={styles.textInput}
-                    errorText={error?.message}
+                    errorText={
+                      error && error.type == "password" && error?.message
+                    }
                     {...register("password", {
                       required: true,
                       minLength: 8,
@@ -261,14 +250,14 @@ const SignUpModal = (props) => {
                   )}
                 </div>
                 <div className={styles.modalFooter}>
-                  <Button
+                  <button
                     disabled={!isDirty || !isValid}
-                    onClick={async () => await emailVerification()}
-                    onKeyPress={async () => await emailVerification()}
+                    onClick={async () => await startRegistration()}
+                    onKeyPress={async () => await startRegistration()}
                     className={styles.signUpButton}
                   >
                     Sign Up
-                  </Button>
+                  </button>
                 </div>
               </>
             )}
@@ -291,13 +280,14 @@ const SignUpModal = (props) => {
                     onPaste={async () => await trigger("code")}
                   />
                   <div className={styles.modalFooter}>
-                    <Button
+                    <button
+                      type="button"
                       onClick={async () => await verifyOtp()}
                       onKeyPress={async () => await verifyOtp()}
                       className={styles.signUpButton}
                     >
                       Continue
-                    </Button>
+                    </button>
                   </div>
                 </div>
               </>

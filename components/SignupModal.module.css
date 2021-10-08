@@ -163,3 +163,7 @@
   font-weight: bold;
   margin: 8px 0px;
 }
+
+.signUpButton:disabled {
+  opacity: 0.5;
+}

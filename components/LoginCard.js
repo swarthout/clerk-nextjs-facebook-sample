@@ -1,26 +1,31 @@
 import React from "react";
 import styles from "../styles/Home.module.css";
+import { Input } from "./Input";
+import { SIMPLE_REGEX_PATTERN } from "./constants";
 
-export const LoginCard = ({ onSubmit, register, onCreateAccount }) => {
+export const LoginCard = ({ onSubmit, register, onCreateAccount, error }) => {
   return (
     <div className={styles.loginCard}>
       <form onSubmit={onSubmit}>
         <div className={styles.loginCardInputs}>
-          <input
-            type="text"
+          <Input
             className={styles.textInput}
-            placeholder="Email or Phone Number"
-            aria-label="Email or Phone Number"
-            {...register("email", { required: true })}
-          ></input>
-
-          <input
+            errorText={error && error.type == "identifier" && error?.message}
+            {...register("emailAddress", {
+              required: true,
+              pattern: SIMPLE_REGEX_PATTERN,
+            })}
+            placeholder="Email address"
+          />
+          <Input
+            className={styles.textInput}
+            errorText={error && error.type == "password" && error?.message}
+            {...register("password", {
+              required: true,
+            })}
+            placeholder="New password"
             type="password"
-            className={styles.textInput}
-            placeholder="Password"
-            aria-label="Password"
-            {...register("password", { required: true })}
-          ></input>
+          />
 
           <button className={styles.loginButton} name="login" type="submit">
             Log In

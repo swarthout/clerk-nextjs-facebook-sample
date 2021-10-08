@@ -1,7 +1,6 @@
 import '../styles/globals.css'
 import { ClerkProvider, SignedIn, SignedOut } from '@clerk/nextjs'
 import { useRouter } from 'next/router'
-import Layout from '../components/Layout'
 import Head from 'next/head'
 import Script from 'next/script'
 import Link from 'next/link'
@@ -33,7 +32,7 @@ const MyApp = ({ Component, pageProps }) => {
       </Head>
       <Script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-core.min.js" />
       <Script src="https://cdn.jsdelivr.net/npm/prismjs@1/plugins/autoloader/prism-autoloader.min.js" />
-      <Layout>
+      <main>
         {publicPages.includes(router.pathname) ? (
           <Component {...pageProps} />
         ) : (
@@ -54,7 +53,7 @@ const MyApp = ({ Component, pageProps }) => {
             </SignedOut>
           </>
         )}
-      </Layout>
+      </main>
     </ClerkProvider>
   )
 }
