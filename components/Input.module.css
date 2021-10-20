@@ -17,4 +17,5 @@
 .errorText {
   display: block;
   align-self: flex-start;
+  color: var(--bs-danger);
 }

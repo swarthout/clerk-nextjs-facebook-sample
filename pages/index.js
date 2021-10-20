@@ -1,13 +1,11 @@
-import React, { useState } from "react";
-import Head from "next/head";
-import styles from "../styles/Home.module.css";
+import { withClerk } from "@clerk/clerk-react";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
-import { useForm } from "react-hook-form";
-import { SignUpModalWithClerk } from "../components/SignupModal";
-import { useSignIn, withClerk, useClerk } from "@clerk/clerk-react";
-import { useRouter } from "next/router";
+import Head from "next/head";
+import React, { useState } from "react";
 import { Profile } from "../components/Profile";
-import { LoginCard } from "../components/LoginCard";
+import { SignInCardWithClerk } from "../components/SignInCard";
+import { SignUpCardWithClerk } from "../components/SignUpCard";
+import styles from "../styles/Home.module.css";
 
 // Main component using <SignedIn> & <SignedOut>.
 //
@@ -16,56 +14,25 @@ import { LoginCard } from "../components/LoginCard";
 //
 // https://docs.clerk.dev/frontend/react/signedin-and-signedout
 const Main = () => {
-  const [show, setShow] = useState(false);
-  const { register, handleSubmit } = useForm();
-  const clerk = useClerk();
-  const signIn = useSignIn();
-  const router = useRouter();
-
-  const [error, setError] = useState(null);
-
-  const setClerkError = (error) =>
-    setError({ type: error.meta.paramName, message: error.longMessage });
-
-  const onSubmit = async (data) => {
-    try {
-      const signInAttempt = await signIn.create({
-        identifier: data.emailAddress,
-        password: data.password,
-      });
-
-      if (signInAttempt.status === "complete") {
-        await clerk.setSession(signInAttempt.createdSessionId);
-        router.replace("/");
-      }
-    } catch (err) {
-      if (err.errors) {
-        setClerkError(err.errors[0]);
-      } else {
-        throw err;
-      }
-    }
-  };
-
+  const [showSignUp, setShowSignUp] = useState(false);
   return (
     <>
       <SignedOut>
-        <div className={styles.main}>
-          <div className={styles.introHeader}>
-            <h1 className={styles.logo}> Clerkbook </h1>
-            <h3 className={styles.tagline}>
-              Connect with friends and the world around you on Clerkbook.
-            </h3>
+        <nav className="navbar navbar-light bg-light">
+          <div className="container-fluid">
+            <span className="navbar-brand mb-0 h1">Clerk Example</span>
           </div>
-          <div className={styles.rightColumn}>
-            <LoginCard
-              onSubmit={handleSubmit(onSubmit)}
-              register={register}
-              onCreateAccount={() => setShow(true)}
-              error={error}
-            />
+        </nav>
+        <div className="container h-100">
+          <div className="d-flex flex-column  align-items-center justify-content-center h-100">
+            <div className="card px-4 py-4 w-50 shadow-sm">
+              {showSignUp ? (
+                <SignUpCardWithClerk onSignIn={() => setShowSignUp(false)} />
+              ) : (
+                <SignInCardWithClerk onSignUp={() => setShowSignUp(true)} />
+              )}
+            </div>
           </div>
-          <SignUpModalWithClerk show={show} onClose={() => setShow(false)} />
         </div>
       </SignedOut>
       <SignedIn>
