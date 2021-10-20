@@ -39,9 +39,9 @@ export const SignInCard = ({ onSignUp }) => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="col align-items-center justify-content-center">
+        <div className="col">
         <h3>Log in</h3>
-          <div className="row px-4 justify-content-center">
+          <div className="row px-4">
             <Input
               className="form-control mt-4"
               errorText={error && error.type == "identifier" && error?.message}
@@ -52,7 +52,7 @@ export const SignInCard = ({ onSignUp }) => {
               placeholder="Email address"
             />
           </div>
-          <div className="row px-4 justify-content-center">
+          <div className="row px-4">
             <Input
               className="form-control mt-4"
               errorText={error && error.type == "password" && error?.message}
@@ -64,7 +64,7 @@ export const SignInCard = ({ onSignUp }) => {
             />
           </div>
 
-          <div className="row px-4 justify-content-center">
+          <div className="row px-4">
             <button
               className="btn btn-primary mt-4 mx-auto"
               name="login"
@@ -75,7 +75,7 @@ export const SignInCard = ({ onSignUp }) => {
           </div>
         </div>
       </form>
-      <div className="col align-items-center justify-content-center">
+      <div className="col">
         <div className="row mt-4">
           <span className="text-center">
             {" "}

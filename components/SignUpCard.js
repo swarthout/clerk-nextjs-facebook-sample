@@ -96,9 +96,9 @@ const SignUpCard = ({ onSignIn }) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         {formStep === "EMAIL" && (
           <>
-            <div className="col align-items-center justify-content-center">
+            <div className="col">
               <h3>Sign up</h3>
-              <div className="row justify-content-center">
+              <div className="row">
                 <Input
                   className="form-control mt-4 col mx-2"
                   {...register("firstName", {
@@ -116,7 +116,7 @@ const SignUpCard = ({ onSignIn }) => {
                   placeholder="Last name"
                 />
               </div>
-              <div className="row justify-content-center">
+              <div className="row">
                 <Input
                   className="form-control mt-4 mx-2 col"
                   errorText={
@@ -129,7 +129,7 @@ const SignUpCard = ({ onSignIn }) => {
                   placeholder="Email address"
                 />
               </div>
-              <div className="row justify-content-center">
+              <div className="row">
                 <Input
                   className="form-control mt-4 mx-2 col"
                   errorText={
@@ -144,7 +144,7 @@ const SignUpCard = ({ onSignIn }) => {
                 />
               </div>
               <div className="row my-2 ms-1">Birthday</div>
-              <div className="row justify-content-center">
+              <div className="row">
                 <BirthdaySelect
                   options={MONTHS}
                   name="month"
@@ -167,7 +167,7 @@ const SignUpCard = ({ onSignIn }) => {
 
               <div>
                 <div className="row my-2 ms-1">Gender</div>
-                <div className="row justify-content-center">
+                <div className="row">
                   <span
                     className="col text-center border rounded mx-2 py-2"
                     onClick={() =>
@@ -215,7 +215,7 @@ const SignUpCard = ({ onSignIn }) => {
               </div>
               {watchGender == "custom" && (
                 <>
-                  <div className="row justify-content-center">
+                  <div className="row">
                     <select
                       {...register("pronouns")}
                       className="mt-4 col mx-2 form-control col"
@@ -232,7 +232,7 @@ const SignUpCard = ({ onSignIn }) => {
                     </select>
                   </div>
 
-                  <div className="row justify-content-center">
+                  <div className="row">
                     <Input
                       className="mt-4 col mx-2 form-control col"
                       {...register("customGenderText", {
@@ -245,7 +245,7 @@ const SignUpCard = ({ onSignIn }) => {
                 </>
               )}
             </div>
-            <div className="row justify-content=center">
+            <div className="row">
               <button
                 disabled={!isDirty || !isValid}
                 onClick={async () => await startRegistration()}
@@ -267,7 +267,7 @@ const SignUpCard = ({ onSignIn }) => {
                 A 6-digit code was just sent to <br />
                 {getValues("email")}
               </span>
-              <div className="row justify-content=center">
+              <div className="row">
                 <Input
                   className="mt-4 col mx-2 form-control col"
                   {...register("code", {
@@ -279,7 +279,7 @@ const SignUpCard = ({ onSignIn }) => {
                 />
               </div>
 
-              <div className="row justify-content=center">
+              <div className="row">
                 <button
                   type="button"
                   onClick={async () => await verifyOtp()}
@@ -293,7 +293,7 @@ const SignUpCard = ({ onSignIn }) => {
           </>
         )}
       </form>
-      <div className="col align-items-center justify-content-center">
+      <div className="col">
         <div className="row mt-4">
           <span className="text-center">
             {" "}
